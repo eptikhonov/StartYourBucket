@@ -17,7 +17,7 @@ const Home = ({ facebook, facebookActions }) => {
     <>
       {
         <Button className={classes.buttonStyles} variant="contained" color="secondary" fullWidth>
-          Please click Me
+          Please Click Me
         </Button>
       }
     </>

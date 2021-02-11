@@ -4,17 +4,21 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run server",
     "server": "nodemon server.js",
     "client": "npm start --prefix ../",
     "dev": "concurrently \"npm run server\" \"npm run ../client\""
   },
   "author": "Eric Tikhonov",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "joi": "^17.4.0",
+    "joigoose": "^8.0.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.14"
   },
   "devDependencies": {

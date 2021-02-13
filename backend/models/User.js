@@ -5,6 +5,16 @@ const Joigoose = require('joigoose')(Mongoose);
 const userJoiSchema = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
+  bio: Joi.string(),
+  avatarUrl: Joi.string(),
+  idBuckets: Joi.array().items(Joi.string()),
+  idTeams: Joi.array().items(Joi.string()),
+  loginTypes: Joi.array().items(Joi.string()),
+  settings: Joi.object({
+    //notificationInfo: Joi.object({}),
+    //timezoneInfo: Joi.object({}),
+    colorBlind: Joi.bool().default(false)
+  }),
   email: Joi.string().required().email(),
   password: Joi.string().min(6).required(),
   createdDate: Joi.date().default(Date.now()),

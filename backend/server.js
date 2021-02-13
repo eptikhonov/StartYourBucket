@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
+const bucketRoutes = require('./routes/bucket');
+const teamRoutes = require('./routes/team');
 const authRoutes = require('./routes/auth');
 
 require('dotenv').config();
@@ -23,5 +25,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
 // routes
 app.use('/', authRoutes);
 app.use('/user', userRoutes);
+app.use('/bucket', bucketRoutes);
+app.use('/team', teamRoutes);
 
 app.listen(port, () => console.log('Server started...'));

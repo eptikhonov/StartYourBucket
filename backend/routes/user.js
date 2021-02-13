@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const { User } = require('../models/User');
-const verifyToken = require('../util/verifyToken');
+const { User } = require('../models');
+const { verifyToken } = require('../util/tokenHelper');
 
 // all users
 router.get('/', verifyToken, async (req, res) => {
@@ -14,7 +14,7 @@ router.get('/', verifyToken, async (req, res) => {
     });
 });
 
-// user info
+// specific user info
 router.get('/:userId', verifyToken, async (req, res) => {
   const userId = req.params.userId;
   await User.findById(userId)

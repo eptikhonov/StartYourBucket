@@ -1,32 +1,28 @@
 const Joi = require('joi');
-const { UserJoiSchema, BucketJoiSchema } = require('../models');
+const { UserJoiObject, BucketJoiObject, TeamJoiObject } = require('../models');
 
 const registerValidation = (data) => {
-  return UserJoiSchema.validate(data);
+  return Joi.object(userJoiObject).validate(data);
 };
 
 const loginValidation = (data) => {
-  // const schema = UserJoiSchema.fork(['email', 'password'], (field) =>
-  //   field.required()
-  // );
-
+  const { email, password } = UserJoiObject;
   const schema = Joi.object({
-    email: Joi.string().required().email(),
-    password: Joi.string().min(6).required()
+    email,
+    password
   });
-
   return schema.validate(data);
 };
 
 const bucketValidation = (data) => {
-  const schema = BucketJoiSchema.fork(['name'], (field) => field.required());
+  const { name } = BucketJoiObject;
+  const schema = Joi.object({ name });
   return schema.validate(data);
 };
 
 const teamValidation = (data) => {
-  const schema = Joi.object({
-    name: Joi.string().min(1).max(20).required()
-  });
+  const { name } = TeamJoiObject;
+  const schema = Joi.object({ name });
   return schema.validate(data);
 };
 

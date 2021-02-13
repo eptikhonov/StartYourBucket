@@ -2,7 +2,7 @@ const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 
-const teamJoiObject = {
+const TeamJoiObject = {
   name: Joi.string().min(1).max(20).required(),
   description: Joi.string().max(500),
   avatarUrl: Joi.string(),
@@ -23,12 +23,16 @@ const teamJoiObject = {
   modifiedDate: Joi.date().default(Date.now())
 };
 
-const teamJoiSchema = Joi.object(teamJoiObject);
+const TeamJoiSchema = Joi.object(TeamJoiObject);
 
 // convert joi schema to mongoose schema
-const teamMongooseSchema = new Mongoose.Schema(Joigoose.convert(teamJoiSchema));
+const TeamMongooseSchema = new Mongoose.Schema(Joigoose.convert(TeamJoiSchema));
 
-module.exports.TeamJoiObject = teamJoiObject;
-module.exports.TeamJoiSchema = teamJoiSchema;
-module.exports.TeamMongooseSchema = teamMongooseSchema;
-module.exports.Team = Mongoose.model('Teams', teamMongooseSchema);
+const Team = Mongoose.model('Teams', TeamMongooseSchema);
+
+module.exports = {
+  TeamJoiObject,
+  TeamJoiSchema,
+  TeamMongooseSchema,
+  Team
+};

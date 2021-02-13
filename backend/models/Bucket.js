@@ -2,7 +2,7 @@ const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 
-const bucketJoiObject = {
+const BucketJoiObject = {
   name: Joi.string().min(1).max(20).required(),
   closed: Joi.bool().default(false),
   idTeam: Joi.string(),
@@ -24,14 +24,18 @@ const bucketJoiObject = {
   modifiedDate: Joi.date().default(Date.now())
 };
 
-const bucketJoiSchema = Joi.object();
+const BucketJoiSchema = Joi.object(BucketJoiObject);
 
 // convert joi schema to mongoose schema
-const bucketMongooseSchema = new Mongoose.Schema(
-  Joigoose.convert(bucketJoiSchema)
+const BucketMongooseSchema = new Mongoose.Schema(
+  Joigoose.convert(BucketJoiSchema)
 );
 
-module.exports.BucketJoiObject = bucketJoiObject;
-module.exports.BucketJoiSchema = bucketJoiSchema;
-module.exports.BucketMongooseSchema = bucketMongooseSchema;
-module.exports.Bucket = Mongoose.model('Buckets', bucketMongooseSchema);
+const Bucket = Mongoose.model('Buckets', BucketMongooseSchema);
+
+module.exports = {
+  BucketJoiObject,
+  BucketJoiSchema,
+  BucketMongooseSchema,
+  Bucket
+};

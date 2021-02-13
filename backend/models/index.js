@@ -17,17 +17,19 @@ const {
   BucketMongooseSchema
 } = require('./Bucket');
 
-module.exports.User = User;
-module.exports.UserJoiObject = UserJoiObject;
-module.exports.UserJoiSchema = UserJoiSchema;
-module.exports.UserMongooseSchema = UserMongooseSchema;
+module.exports = {
+  User,
+  UserJoiObject,
+  UserJoiSchema,
+  UserMongooseSchema,
 
-module.exports.Team = Team;
-module.exports.TeamJoiObject = TeamJoiObject;
-module.exports.TeamJoiSchema = TeamJoiSchema;
-module.exports.TeamMongooseSchema = TeamMongooseSchema;
+  Team,
+  TeamJoiObject,
+  TeamJoiSchema,
+  TeamMongooseSchema,
 
-module.exports.Bucket = Bucket;
-module.exports.BucketJoiObject = BucketJoiObject;
-module.exports.BucketJoiSchema = BucketJoiSchema;
-module.exports.BucketMongooseSchema = BucketMongooseSchema;
+  Bucket,
+  BucketJoiObject,
+  BucketJoiSchema,
+  BucketMongooseSchema
+};

@@ -26,7 +26,9 @@ const teamValidation = (data) => {
   return schema.validate(data);
 };
 
-module.exports.registerValidation = registerValidation;
-module.exports.loginValidation = loginValidation;
-module.exports.bucketValidation = bucketValidation;
-module.exports.teamValidation = teamValidation;
+module.exports = {
+  registerValidation,
+  loginValidation,
+  bucketValidation,
+  teamValidation
+};

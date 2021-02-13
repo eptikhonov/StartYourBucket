@@ -34,5 +34,7 @@ const getUserIdFromToken = async (req) => {
   return null;
 };
 
-module.exports.verifyToken = verifyToken;
-module.exports.getUserIdFromToken = getUserIdFromToken;
+module.exports = {
+  verifyToken,
+  getUserIdFromToken
+};

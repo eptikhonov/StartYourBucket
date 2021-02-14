@@ -20,8 +20,10 @@ app.use(express.json());
 
 // connect to MongoDB
 const uri = process.env.DB_CONNECTION;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
-  console.log('MongoDB database connection established successfully')
+mongoose.connect(
+  uri,
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  () => console.log('MongoDB database connection established successfully')
 );
 
 // routes

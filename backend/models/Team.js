@@ -3,7 +3,7 @@ const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 
 const TeamJoiObject = {
-  name: Joi.string().min(1).max(20).required(),
+  name: Joi.string().min(1).max(20),
   description: Joi.string().max(500),
   avatarUrl: Joi.string(),
   shortLink: Joi.string(),

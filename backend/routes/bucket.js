@@ -4,9 +4,9 @@ const { verifyToken } = require('../util/tokenHelper');
 const { bucketController } = require('../controllers');
 
 router.get('/', verifyToken, bucketController.getAllBuckets);
-
-router.get('/:bucketId', verifyToken, bucketController.getBucketById);
-
 router.post('/', verifyToken, bucketController.createBucket);
+router.get('/:bucketId', verifyToken, bucketController.getBucketById);
+router.put('/:bucketId', verifyToken, bucketController.updateBucket);
+router.delete('/:bucketId', verifyToken, bucketController.deleteBucket);
 
 module.exports = router;

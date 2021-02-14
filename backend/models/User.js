@@ -3,8 +3,8 @@ const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 
 const UserJoiObject = {
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
+  firstName: Joi.string(),
+  lastName: Joi.string(),
   bio: Joi.string(),
   avatarUrl: Joi.string(),
   idBuckets: Joi.array().items(Joi.string()),
@@ -15,8 +15,8 @@ const UserJoiObject = {
     //timezoneInfo: Joi.object({}),
     colorBlind: Joi.bool().default(false)
   }),
-  email: Joi.string().required().email(),
-  password: Joi.string().min(6).required(),
+  email: Joi.string().email(),
+  password: Joi.string().min(6),
   createdDate: Joi.date().default(Date.now()),
   modifiedDate: Joi.date().default(Date.now())
 };

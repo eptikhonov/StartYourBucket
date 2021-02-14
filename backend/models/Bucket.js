@@ -3,7 +3,7 @@ const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 
 const BucketJoiObject = {
-  name: Joi.string().min(1).max(20).required(),
+  name: Joi.string().min(1).max(20),
   closed: Joi.bool().default(false),
   idTeam: Joi.string(),
   shortLink: Joi.string(),

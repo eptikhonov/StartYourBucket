@@ -7,36 +7,34 @@ const authController = {
   register: async (req, res) => {
     // validate request body with schema
     const { error } = registerValidation(req.body);
-    if (error) {
-      res.status(400).json({ error: error.details[0].message });
-    } else {
-      // check for existing user
-      const email = req.body.email;
-      const existingUser = await User.findOne({ email }).catch((err) =>
-        console.log(err)
-      );
-      if (existingUser)
-        return res.status(400).json({ error: 'Email already exists' });
+    if (error) return res.status(400).json({ error: error.details[0].message });
 
-      // hash password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    // check for existing user
+    const email = req.body.email;
+    const existingUser = await User.findOne({ email }).catch((err) =>
+      console.log(err)
+    );
+    if (existingUser)
+      return res.status(400).json({ error: 'Email already exists' });
 
-      // create new user
-      const user = new User({
-        ...req.body,
-        loginTypes: ['password'],
-        password: hashedPassword
+    // hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    // create new user
+    const user = new User({
+      ...req.body,
+      loginTypes: ['password'],
+      password: hashedPassword
+    });
+    await user
+      .save()
+      .then((data) => {
+        return res.status(200).json({ user: user._id }); // return new user id
+      })
+      .catch((err) => {
+        return res.status(400).json(err);
       });
-      await user
-        .save()
-        .then((data) => {
-          res.status(200).json({ user: user._id }); // return new user id
-        })
-        .catch((err) => {
-          res.status(400).json(err);
-        });
-    }
   },
   login: async (req, res) => {
     // validate request body with schema

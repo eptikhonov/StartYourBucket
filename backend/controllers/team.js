@@ -1,5 +1,4 @@
-const { Team } = require('../models');
-const { teamValidation, updateTeamValidation } = require('../util/validation');
+const { Team, teamValidation, updateTeamValidation } = require('../models');
 const { getUserIdFromToken } = require('../util/tokenHelper');
 
 const teamController = {

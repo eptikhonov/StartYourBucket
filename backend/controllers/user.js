@@ -1,5 +1,4 @@
-const { User } = require('../models');
-const { updateUserValidation } = require('../util/validation');
+const { User, updateUserValidation } = require('../models');
 const { getUserIdFromToken } = require('../util/tokenHelper');
 
 const userController = {

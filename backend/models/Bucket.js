@@ -32,7 +32,19 @@ const BucketMongooseSchema = new Mongoose.Schema(
 
 const Bucket = Mongoose.model('Buckets', BucketMongooseSchema);
 
+// schema validations
+const BucketValidations = {
+  bucketValidation: (data) => {
+    const { name } = BucketJoiObject;
+    const schema = Joi.object({ name: name.required() });
+    return schema.validate(data);
+  },
+  updateBucketValidation: (data) => {
+    return BucketJoiSchema.validate(data);
+  }
+};
 module.exports = {
+  BucketValidations,
   BucketJoiObject,
   BucketJoiSchema,
   BucketMongooseSchema,

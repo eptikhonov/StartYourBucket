@@ -22,11 +22,41 @@ const UserJoiObject = {
 const UserJoiSchema = Joi.object(UserJoiObject);
 
 // convert joi schema to mongoose schema
-const UserMongooseSchema = new Mongoose.Schema(Joigoose.convert(UserJoiSchema));
+const UserMongooseSchema = new Mongoose.Schema(
+  Joigoose.convert(UserJoiSchema),
+  { timestamps: true }
+);
 
 const User = Mongoose.model('Users', UserMongooseSchema);
 
+// schema validations
+const UserValidations = {
+  registerValidation: (data) => {
+    const { firstName, lastName, email, password } = UserJoiObject;
+    const schema = Joi.object({
+      ...UserJoiObject,
+      firstName: firstName.required(),
+      lastName: lastName.required(),
+      email: email.required(),
+      password: password.required()
+    });
+    return schema.validate(data);
+  },
+  loginValidation: (data) => {
+    const { email, password } = UserJoiObject;
+    const schema = Joi.object({
+      email: email.required(),
+      password: password.required()
+    });
+    return schema.validate(data);
+  },
+  updateUserValidation: (data) => {
+    return UserJoiSchema.validate(data);
+  }
+};
+
 module.exports = {
+  UserValidations,
   UserJoiObject,
   UserJoiSchema,
   UserMongooseSchema,

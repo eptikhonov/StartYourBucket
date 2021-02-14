@@ -1,8 +1,8 @@
-const { Bucket } = require('../models');
 const {
+  Bucket,
   bucketValidation,
   updateBucketValidation
-} = require('../util/validation');
+} = require('../models');
 const { getUserIdFromToken } = require('../util/tokenHelper');
 
 const bucketController = {

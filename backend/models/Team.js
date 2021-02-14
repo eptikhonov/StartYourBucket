@@ -24,11 +24,27 @@ const TeamJoiObject = {
 const TeamJoiSchema = Joi.object(TeamJoiObject);
 
 // convert joi schema to mongoose schema
-const TeamMongooseSchema = new Mongoose.Schema(Joigoose.convert(TeamJoiSchema));
+const TeamMongooseSchema = new Mongoose.Schema(
+  Joigoose.convert(TeamJoiSchema),
+  { timestamps: true }
+);
 
 const Team = Mongoose.model('Teams', TeamMongooseSchema);
 
+// schema validations
+const TeamValidations = {
+  teamValidation: (data) => {
+    const { name } = TeamJoiObject;
+    const schema = Joi.object({ name: name.required() });
+    return schema.validate(data);
+  },
+  updateTeamValidation: (data) => {
+    return TeamJoiSchema.validate(data);
+  }
+};
+
 module.exports = {
+  TeamValidations,
   TeamJoiObject,
   TeamJoiSchema,
   TeamMongooseSchema,

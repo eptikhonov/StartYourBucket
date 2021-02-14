@@ -19,16 +19,15 @@ const BucketJoiObject = {
   settings: Joi.object({
     permissionLevel: Joi.string(),
     backgroundImage: Joi.string()
-  }),
-  createdDate: Joi.date().default(Date.now()),
-  modifiedDate: Joi.date().default(Date.now())
+  })
 };
 
 const BucketJoiSchema = Joi.object(BucketJoiObject);
 
 // convert joi schema to mongoose schema
 const BucketMongooseSchema = new Mongoose.Schema(
-  Joigoose.convert(BucketJoiSchema)
+  Joigoose.convert(BucketJoiSchema),
+  { timestamps: true }
 );
 
 const Bucket = Mongoose.model('Buckets', BucketMongooseSchema);

@@ -18,9 +18,7 @@ const TeamJoiObject = {
   ),
   settings: Joi.object({
     permissionLevel: Joi.string()
-  }),
-  createdDate: Joi.date().default(Date.now()),
-  modifiedDate: Joi.date().default(Date.now())
+  })
 };
 
 const TeamJoiSchema = Joi.object(TeamJoiObject);

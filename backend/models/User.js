@@ -16,9 +16,7 @@ const UserJoiObject = {
     colorBlind: Joi.bool().default(false)
   }),
   email: Joi.string().email(),
-  password: Joi.string().min(6),
-  createdDate: Joi.date().default(Date.now()),
-  modifiedDate: Joi.date().default(Date.now())
+  password: Joi.string().min(6)
 };
 
 const UserJoiSchema = Joi.object(UserJoiObject);

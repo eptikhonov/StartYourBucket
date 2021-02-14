@@ -1,5 +1,12 @@
 const Joi = require('joi');
-const { UserJoiObject, BucketJoiObject, TeamJoiObject } = require('../models');
+const {
+  UserJoiObject,
+  UserJoiSchema,
+  BucketJoiObject,
+  BucketJoiSchema,
+  TeamJoiObject,
+  TeamJoiSchema
+} = require('../models');
 
 const registerValidation = (data) => {
   const { firstName, lastName, email, password } = UserJoiObject;
@@ -35,21 +42,15 @@ const teamValidation = (data) => {
 };
 
 const updateUserValidation = (data) => {
-  const { createdDate, ...userObject } = UserJoiObject;
-  const schema = Joi.object(userObject);
-  return schema.validate(data);
+  return UserJoiSchema.validate(data);
 };
 
 const updateTeamValidation = (data) => {
-  const { createdDate, ...teamObject } = TeamJoiObject;
-  const schema = Joi.object(teamObject);
-  return schema.validate(data);
+  return TeamJoiSchema.validate(data);
 };
 
 const updateBucketValidation = (data) => {
-  const { createdDate, ...bucketObject } = BucketJoiObject;
-  const schema = Joi.object(bucketObject);
-  return schema.validate(data);
+  return BucketJoiSchema.validate(data);
 };
 
 module.exports = {

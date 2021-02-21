@@ -20,8 +20,14 @@ const listController = {
   },
   getListById: async (req, res) => {
     const listId = req.params.listId;
+    // load list items
+    const listItems = await ListItem.find({
+      idBucketList: listId
+    }).catch((err) => console.log(err));
+
     await List.findById(listId)
       .then((data) => {
+        data.itemsList = listItems;
         return res.status(200).json(data);
       })
       .catch((err) => {

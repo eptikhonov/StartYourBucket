@@ -43,7 +43,7 @@ const listItemController = {
     const listFound = await List.findById(listId).catch((err) =>
       console.log(err)
     );
-    if (listFound === null)
+    if (!listFound)
       return res
         .status(400)
         .json({ error: 'List cannot be found of list item' });
@@ -56,7 +56,7 @@ const listItemController = {
     }).catch((err) => console.log(err));
 
     if (!isUserABucketMember)
-      return res.status(400).json('User not a member of bucket');
+      return res.status(400).json({ error: 'User not a member of bucket' });
 
     // check for existing list item within a list
     const title = req.body.title;
@@ -96,7 +96,7 @@ const listItemController = {
     const listItemFound = await ListItem.findById(listItemId).catch((err) =>
       console.log(err)
     );
-    if (listItemFound === null)
+    if (!listItemFound)
       return res
         .status(400)
         .json({ error: 'List Item cannot be found for update' });
@@ -105,10 +105,10 @@ const listItemController = {
     const listFound = await List.findById(listId).catch((err) =>
       console.log(err)
     );
-    if (listFound === null)
+    if (!listFound)
       return res
         .status(400)
-        .json({ error: 'List cannot be found of list item' });
+        .json({ error: 'List cannot be found of list item for update' });
 
     // check if user is member of bucket from list
     const bucketId = listFound.idBucket;
@@ -118,7 +118,7 @@ const listItemController = {
     }).catch((err) => console.log(err));
 
     if (!isUserABucketMember)
-      return res.status(400).json('User not a member of bucket');
+      return res.status(400).json({ error: 'User not a member of bucket' });
 
     await ListItem.findByIdAndUpdate(listItemId, { $set: req.body })
       .then((data) => {
@@ -137,26 +137,47 @@ const listItemController = {
         error: 'Unable to delete a list from an invalid user'
       });
 
+    const listItemId = req.params.listItemId;
+
+    // get list item
+    const listItemFound = await ListItem.findById(listItemId).catch((err) =>
+      console.log(err)
+    );
+    if (!listItemFound)
+      return res
+        .status(400)
+        .json({ error: 'List Item cannot be found for deletion' });
+
+    // get list from id found
+    const listFoud = await List.findById(
+      listItemFound.idBucketList
+    ).catch((err) => console.log(err));
+    if (!listFoud)
+      return res
+        .status(400)
+        .json({ error: 'List cannot be found for list item deletion' });
+
     // check if user is admin of bucket
-    const bucketId = req.params.bucketId;
+    const bucketId = listFoud.idBucket;
     const isUserABucketAdmin = await Bucket.findOne({
       _id: bucketId,
       'members.id': userIdFound,
       'members.memberType': 'admin'
     }).catch((err) => console.log(err));
     if (!isUserABucketAdmin)
-      return res
-        .status(400)
-        .json('Unable to delete list. User not an admin of bucket');
+      return res.status(400).json({
+        error: 'Unable to delete list item. User not an admin of bucket'
+      });
 
-    // delete all list items
-    const listItemId = req.params.idBucketList;
-    await ListItem.deleteMany({
-      idBucketList: listItemId
-    }).catch((err) => {
-      console.log(err);
-      return res.status(400).json(err);
-    });
+    // delete list item
+    await ListItem.findByIdAndDelete(listItemId)
+      .then((data) => {
+        return res.status(200).json();
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(400).json(err);
+      });
   }
 };
 

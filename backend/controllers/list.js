@@ -46,7 +46,7 @@ const listController = {
       'members.id': userIdFound
     }).catch((err) => console.log(err));
     if (!isUserABucketMember)
-      return res.status(400).json('User not a member of bucket');
+      return res.status(400).json({ error: 'User not a member of bucket' });
 
     // check for existing list within a bucket
     const title = req.body.title;
@@ -87,7 +87,7 @@ const listController = {
     const listFound = await List.findById(listId).catch((err) =>
       console.log(err)
     );
-    if (listFound === null)
+    if (!listFound)
       return res
         .status(400)
         .json({ error: 'List cannot be found of list item' });
@@ -100,7 +100,7 @@ const listController = {
     }).catch((err) => console.log(err));
 
     if (!isUserABucketMember)
-      return res.status(400).json('User not a member of bucket');
+      return res.status(400).json({ error: 'User not a member of bucket' });
 
     await List.findByIdAndUpdate(listId, { $set: req.body })
       .then((data) => {
@@ -119,8 +119,19 @@ const listController = {
         error: 'Unable to delete a list from an invalid user'
       });
 
+    const listId = req.params.listId;
+
+    // get list
+    const listFoud = await List.findById(listId).catch((err) =>
+      console.log(err)
+    );
+    if (!listFoud)
+      return res
+        .status(400)
+        .json({ error: 'List cannot be found for list deletion' });
+
     // check if user is admin of bucket
-    const bucketId = req.params.bucketId;
+    const bucketId = listFoud.idBucket;
     const isUserABucketAdmin = await Bucket.findOne({
       _id: bucketId,
       'members.id': userIdFound,
@@ -129,10 +140,9 @@ const listController = {
     if (!isUserABucketAdmin)
       return res
         .status(400)
-        .json('Unable to delete list. User not an admin of bucket');
+        .json({ error: 'Unable to delete list. User not an admin of bucket' });
 
     // delete all list items
-    const listId = req.params.idBucketList;
     await ListItem.deleteMany({
       idBucketList: listId
     }).catch((err) => {

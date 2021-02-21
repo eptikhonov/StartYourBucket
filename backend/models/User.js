@@ -1,15 +1,16 @@
 const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
+const { loginTypes } = require('../variables/enums');
 
 const UserJoiObject = {
   firstName: Joi.string(),
   lastName: Joi.string(),
-  bio: Joi.string(),
-  avatarUrl: Joi.string(),
+  bio: Joi.string().allow('', null).default(''),
+  avatarUrl: Joi.string().allow('', null).default(''),
   idBuckets: Joi.array().items(Joi.string()),
   idTeams: Joi.array().items(Joi.string()),
-  loginTypes: Joi.array().items(Joi.string()),
+  loginTypes: Joi.array().items(Joi.string().valid(loginTypes.PASSWORD)),
   settings: Joi.object({
     //notificationInfo: Joi.object({}),
     //timezoneInfo: Joi.object({}),

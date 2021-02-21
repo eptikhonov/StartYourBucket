@@ -2,31 +2,29 @@ const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 const { ListJoiSchema } = require('./List');
-
-const bucketTypes = Object.freeze({
-  LIST: 'list',
-  BOARD: 'board'
-});
+const { bucketTypes, memberTypes } = require('../variables/enums');
 
 const BucketJoiObject = {
   name: Joi.string().min(1).max(20),
   closed: Joi.bool().default(false),
-  idTeam: Joi.string(),
-  shortLink: Joi.string(),
+  idTeam: Joi.string().allow('', null).default(''),
+  shortLink: Joi.string().allow('', null).default(''),
   bucketType: Joi.string().valid(bucketTypes.LIST, bucketTypes.BOARD),
-  lists: Joi.array().items(ListJoiSchema),
+  lists: Joi.array().items(ListJoiSchema).default([]),
   // comments: Joi.array().items(Joi.object({ })),
-  members: Joi.array().items(
-    Joi.object({
-      id: Joi.string(),
-      unconfirmed: Joi.bool(),
-      memberType: Joi.string(),
-      deactivated: Joi.bool()
-    })
-  ),
+  members: Joi.array()
+    .items(
+      Joi.object({
+        id: Joi.string(),
+        unconfirmed: Joi.bool().default(false),
+        memberType: Joi.string().valid(memberTypes.ADMIN, memberTypes.NORMAL),
+        deactivated: Joi.bool().default(false)
+      })
+    )
+    .default([]),
   settings: Joi.object({
-    permissionLevel: Joi.string(),
-    backgroundImage: Joi.string()
+    permissionLevel: Joi.string().allow('', null).default(''),
+    backgroundImage: Joi.string().allow('', null).default('')
   })
 };
 
@@ -43,12 +41,18 @@ const Bucket = Mongoose.model('Buckets', BucketMongooseSchema);
 // schema validations
 const BucketValidations = {
   bucketValidation: (data) => {
-    const { name } = BucketJoiObject;
-    const schema = Joi.object({ name: name.required() });
+    const { name, bucketType } = BucketJoiObject;
+    const schema = Joi.object({
+      name: name.required(),
+      bucketType: bucketType.required()
+    });
     return schema.validate(data);
   },
   updateBucketValidation: (data) => {
-    return BucketJoiSchema.validate(data);
+    const { bucketType, ...bucketJoiObject } = BucketJoiObject;
+    // exclude ability to update bucketType
+    const schema = Joi.object(bucketJoiObject);
+    return schema.validate(data);
   }
 };
 module.exports = {

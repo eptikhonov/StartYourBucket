@@ -5,8 +5,8 @@ const { ListItemJoiSchema } = require('./ListItem');
 
 const ListJoiObject = {
   title: Joi.string(),
-  description: Joi.string(),
-  itemsList: Joi.array().items(ListItemJoiSchema),
+  description: Joi.string().allow('', null).default(''),
+  itemsList: Joi.array().items(ListItemJoiSchema).default([]),
   idBucket: Joi.string()
 };
 

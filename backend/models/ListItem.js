@@ -4,10 +4,10 @@ const Joigoose = require('joigoose')(Mongoose);
 
 const ListItemJoiObject = {
   title: Joi.string(),
-  description: Joi.string(),
-  startDate: Joi.date(),
-  endDate: Joi.date(),
-  location: Joi.string(),
+  description: Joi.string().allow('', null).default(''),
+  startDate: Joi.date().allow(null).default(null),
+  endDate: Joi.date().allow(null).default(null),
+  location: Joi.string().allow('', null).default(''),
   members: Joi.array().items(Joi.string()),
   completed: Joi.bool().default(false),
   idBucketList: Joi.string()

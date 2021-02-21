@@ -2,6 +2,7 @@ const { User } = require('../models');
 const { registerValidation, loginValidation } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { loginTypes } = require('../variables/enums');
 
 const authController = {
   register: async (req, res) => {
@@ -24,7 +25,7 @@ const authController = {
     // create new user
     const user = new User({
       ...req.body,
-      loginTypes: ['password'],
+      loginTypes: [loginTypes.PASSWORD],
       password: hashedPassword
     });
     await user

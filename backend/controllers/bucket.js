@@ -6,6 +6,7 @@ const {
   ListItem
 } = require('../models');
 const { getUserIdFromToken } = require('../services/tokenService');
+const { memberTypes } = require('../variables/enums');
 
 const bucketController = {
   getAllBuckets: async (req, res) => {
@@ -70,7 +71,7 @@ const bucketController = {
         {
           id: userIdFound,
           unconfirmed: false,
-          memberType: 'admin',
+          memberType: memberTypes.ADMIN,
           deactivated: false
         }
       ]
@@ -127,7 +128,7 @@ const bucketController = {
     const isUserABucketAdmin = await Bucket.findOne({
       _id: bucketId,
       'members.id': userIdFound,
-      'members.memberType': 'admin'
+      'members.memberType': memberTypes.ADMIN
     }).catch((err) => console.log(err));
     if (!isUserABucketAdmin)
       return res

@@ -1,7 +1,9 @@
 const {
   Bucket,
   bucketValidation,
-  updateBucketValidation
+  updateBucketValidation,
+  List,
+  ListItem
 } = require('../models');
 const { getUserIdFromToken } = require('../services/tokenService');
 
@@ -17,8 +19,24 @@ const bucketController = {
   },
   getBucketById: async (req, res) => {
     const bucketId = req.params.bucketId;
+
+    // load in all lists and list items of bucket
+    const lists = await List.find({ idBucket: bucketId }).catch((err) => {
+      return res.status(400).json(err);
+    });
+
+    lists.forEach(async (list) => {
+      const listItems = await ListItem.find({ idBucketList: list._id }).catch(
+        (err) => {
+          return res.status(400).json(err);
+        }
+      );
+      list.itemsList = listItems;
+    });
+
     await Bucket.findById(bucketId)
       .then((data) => {
+        data.lists = lists;
         return res.status(200).json(data);
       })
       .catch((err) => {

@@ -19,6 +19,20 @@ const {
   BucketJoiSchema,
   BucketMongooseSchema
 } = require('./Bucket');
+const {
+  ListValidations,
+  List,
+  ListJoiObject,
+  ListJoiSchema,
+  ListMongooseSchema
+} = require('./List');
+const {
+  ListItemValidations,
+  ListItem,
+  ListItemJoiObject,
+  ListItemJoiSchema,
+  ListItemMongooseSchema
+} = require('./ListItem');
 
 module.exports = {
   ...UserValidations,
@@ -37,5 +51,17 @@ module.exports = {
   Bucket,
   BucketJoiObject,
   BucketJoiSchema,
-  BucketMongooseSchema
+  BucketMongooseSchema,
+
+  ...ListValidations,
+  List,
+  ListJoiObject,
+  ListJoiSchema,
+  ListMongooseSchema,
+
+  ...ListItemValidations,
+  ListItem,
+  ListItemJoiObject,
+  ListItemJoiSchema,
+  ListItemMongooseSchema
 };

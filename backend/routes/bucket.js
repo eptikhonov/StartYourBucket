@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { verifyToken } = require('../util/tokenHelper');
+const { verifyToken } = require('../services/tokenService');
 const { bucketController } = require('../controllers');
 
 router.get('/', verifyToken, bucketController.getAllBuckets);

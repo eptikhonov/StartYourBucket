@@ -1,5 +1,5 @@
 const { Team, teamValidation, updateTeamValidation } = require('../models');
-const { getUserIdFromToken } = require('../util/tokenHelper');
+const { getUserIdFromToken } = require('../services/tokenService');
 
 const teamController = {
   getAllTeams: async (req, res) => {

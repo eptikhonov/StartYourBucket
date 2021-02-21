@@ -1,12 +1,20 @@
 const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
+const { ListJoiSchema } = require('./List');
+
+const bucketTypes = Object.freeze({
+  LIST: 'list',
+  BOARD: 'board'
+});
 
 const BucketJoiObject = {
   name: Joi.string().min(1).max(20),
   closed: Joi.bool().default(false),
   idTeam: Joi.string(),
   shortLink: Joi.string(),
+  bucketType: Joi.string().valid(bucketTypes.LIST, bucketTypes.BOARD),
+  lists: Joi.array().items(ListJoiSchema),
   // comments: Joi.array().items(Joi.object({ })),
   members: Joi.array().items(
     Joi.object({

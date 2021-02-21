@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const {
   userRoutes,
   bucketRoutes,
+  listRoutes,
+  listItemRoutes,
   teamRoutes,
   authRoutes
 } = require('./routes');
@@ -30,6 +32,8 @@ mongoose.connect(
 app.use('/', authRoutes);
 app.use('/user', userRoutes);
 app.use('/bucket', bucketRoutes);
+app.use('/list', listRoutes);
+app.use('/list-item', listItemRoutes);
 app.use('/team', teamRoutes);
 
 app.listen(port, () => console.log('Server started...'));

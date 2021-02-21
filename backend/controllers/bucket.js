@@ -3,7 +3,7 @@ const {
   bucketValidation,
   updateBucketValidation
 } = require('../models');
-const { getUserIdFromToken } = require('../util/tokenHelper');
+const { getUserIdFromToken } = require('../services/tokenService');
 
 const bucketController = {
   getAllBuckets: async (req, res) => {

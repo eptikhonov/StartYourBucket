@@ -1,5 +1,5 @@
 const { User, updateUserValidation } = require('../models');
-const { getUserIdFromToken } = require('../util/tokenHelper');
+const { getUserIdFromToken } = require('../services/tokenService');
 
 const userController = {
   getAllUsers: async (req, res) => {

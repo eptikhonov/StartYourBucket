@@ -33,6 +33,7 @@ const {
   ListItemJoiSchema,
   ListItemMongooseSchema
 } = require('./ListItem');
+const { MemberJoiObject, MemberValidations } = require('./Member');
 
 module.exports = {
   ...UserValidations,
@@ -63,5 +64,8 @@ module.exports = {
   ListItem,
   ListItemJoiObject,
   ListItemJoiSchema,
-  ListItemMongooseSchema
+  ListItemMongooseSchema,
+
+  ...MemberValidations,
+  MemberJoiObject
 };

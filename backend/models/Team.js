@@ -1,7 +1,7 @@
 const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
-const { memberTypes } = require('../variables/enums');
+const { MemberJoiObject } = require('./Member');
 
 const TeamJoiObject = {
   name: Joi.string().min(1).max(20),
@@ -9,14 +9,7 @@ const TeamJoiObject = {
   avatarUrl: Joi.string().allow('', null).default(''),
   shortLink: Joi.string().allow('', null).default(''),
   idBuckets: Joi.array().items(Joi.string()),
-  members: Joi.array().items(
-    Joi.object({
-      id: Joi.string(),
-      unconfirmed: Joi.bool(),
-      memberType: Joi.string().valid(memberTypes.ADMIN, memberTypes.NORMAL),
-      deactivated: Joi.bool()
-    })
-  ),
+  members: Joi.array().items(Joi.object(MemberJoiObject)).default([]),
   settings: Joi.object({
     permissionLevel: Joi.string().allow('', null).default(''),
     backgroundImage: Joi.string().allow('', null).default('')

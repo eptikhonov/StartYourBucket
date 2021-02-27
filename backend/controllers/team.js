@@ -1,4 +1,10 @@
-const { Team, teamValidation, updateTeamValidation } = require('../models');
+const {
+  Team,
+  teamValidation,
+  updateTeamValidation,
+  addMemberValidation,
+  updateMemberValidation
+} = require('../models');
 const { getUserIdFromToken } = require('../services/tokenService');
 const { memberTypes } = require('../variables/enums');
 
@@ -123,6 +129,152 @@ const teamController = {
         console.log(err);
         return res.status(400).json(err);
       });
+  },
+  // team member
+  findTeamMember: async (req, res) => {
+    // get user id from token
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to find a team member from an invalid user'
+      });
+    // check if user from token is a member
+    const teamId = req.params.teamId;
+    const isUserATeamMember = await Team.findOne({
+      _id: teamId,
+      'members.id': userIdFound
+    }).catch((err) => console.log(err));
+    if (!isUserATeamMember)
+      return res
+        .status(400)
+        .json('User not permitted to find a member of team');
+    // find member of team
+    const memberToFind = req.params.memberId;
+    const memberFound = isUserATeamMember.members.find(
+      (f) => f.id === memberToFind
+    );
+    return res.status(200).json({ member: memberFound ? memberFound : null });
+  },
+  addTeamMember: async (req, res) => {
+    // get user id from token
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to add a team member from an invalid user'
+      });
+
+    // validate request body with schema
+    const { error } = addMemberValidation(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // check if user from token is member of team
+    const teamId = req.params.teamId;
+    const isUserATeamMember = await Team.findOne({
+      _id: teamId,
+      'members.id': userIdFound
+    }).catch((err) => console.log(err));
+    if (!isUserATeamMember)
+      return res.status(400).json('User not permitted to add a member to team');
+
+    // check if user is already a member
+    const memberToAdd = req.body;
+    const isMemberToAddATeamMember = await Team.findOne({
+      _id: teamId,
+      'members.id': memberToAdd.id
+    }).catch((err) => console.log(err));
+    if (isMemberToAddATeamMember)
+      return res.status(400).json('User is already a member of this team');
+
+    // update members list
+    Team.findByIdAndUpdate(
+      teamId,
+      {
+        $push: { members: req.body }
+      },
+      { upsert: true },
+      (err, team) => {
+        if (err) return res.status(400).json(err);
+        else {
+          return res.status(200).json();
+        }
+      }
+    );
+  },
+  updateTeamMember: async (req, res) => {
+    // get user id from token
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to update a team member from an invalid user'
+      });
+
+    // validate request body with schema
+    const { error } = updateMemberValidation(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // check if user from token is a member of team
+    const teamId = req.params.teamId;
+    const isUserATeamMember = await Team.findOne({
+      _id: teamId,
+      'members.id': userIdFound
+    }).catch((err) => console.log(err));
+
+    if (!isUserATeamMember)
+      return res
+        .status(400)
+        .json('User not permitted to update a member of team');
+
+    // update member in team
+    const memberId = req.params.memberId;
+    await Team.findById(teamId, (err, team) => {
+      if (err) console.log(err);
+      else {
+        team.members.forEach((member, i) => {
+          if (member.id == memberId)
+            team.members[i] = { id: memberId, ...req.body };
+        });
+        team.save((err, team) => {
+          if (err) console.log(err);
+          const teamMemberUpdated = team.members.find((f) => f.id === memberId);
+          return res
+            .status(200)
+            .json({ member: teamMemberUpdated ? teamMemberUpdated : null });
+        });
+      }
+    });
+  },
+  deleteTeamMember: async (req, res) => {
+    // get user id from token
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to remove a team member from an invalid user'
+      });
+
+    // check if user from token is admin member of team
+    const teamId = req.params.teamId;
+    const isUserATeamAdminMember = await Team.findOne({
+      _id: teamId,
+      'members.id': userIdFound,
+      'members.memberType': memberTypes.ADMIN
+    }).catch((err) => console.log(err));
+    if (!isUserATeamAdminMember)
+      return res
+        .status(400)
+        .json('User not permitted to remove a member of team');
+
+    // remove member from team
+    const memberid = req.params.memberId;
+    await Team.findById(teamId, (err, team) => {
+      if (err) console.log(err);
+      else {
+        team.members = team.members.filter((f) => f.id !== memberid);
+        team.save((err, team) => {
+          if (err) console.log(err);
+          return res.status(200).json();
+        });
+      }
+    });
   }
 };
 

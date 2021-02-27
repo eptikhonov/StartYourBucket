@@ -2,14 +2,8 @@ const Mongoose = require('mongoose');
 const Joi = require('joi');
 const Joigoose = require('joigoose')(Mongoose);
 const { ListJoiSchema } = require('./List');
-const { bucketTypes, memberTypes } = require('../variables/enums');
-
-const MemberJoiObject = {
-  id: Joi.string(),
-  unconfirmed: Joi.bool().default(false),
-  memberType: Joi.string().valid(memberTypes.ADMIN, memberTypes.NORMAL),
-  deactivated: Joi.bool().default(false)
-};
+const { MemberJoiObject } = require('./Member');
+const { bucketTypes } = require('../variables/enums');
 
 const BucketJoiObject = {
   name: Joi.string().min(1).max(20),
@@ -50,23 +44,6 @@ const BucketValidations = {
     const { bucketType, ...bucketJoiObject } = BucketJoiObject;
     // exclude ability to update bucketType
     const schema = Joi.object(bucketJoiObject);
-    return schema.validate(data);
-  },
-  addBucketMemberValidation: (data) => {
-    const { id, unconfirmed, memberType, deactivated } = MemberJoiObject;
-    // update single member
-    const schema = Joi.object({
-      id: id.required(),
-      unconfirmed: unconfirmed.required(),
-      memberType: memberType.required(),
-      deactivated: deactivated.required()
-    });
-    return schema.validate(data);
-  },
-  updateBucketMemberValidation: (data) => {
-    const { id, ...memberJoiObject } = MemberJoiObject;
-    // exclude id from update
-    const schema = Joi.object(memberJoiObject);
     return schema.validate(data);
   }
 };

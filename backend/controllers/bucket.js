@@ -2,8 +2,8 @@ const {
   Bucket,
   bucketValidation,
   updateBucketValidation,
-  addBucketMemberValidation,
-  updateBucketMemberValidation,
+  addMemberValidation,
+  updateMemberValidation,
   List,
   ListItem
 } = require('../models');
@@ -146,7 +146,7 @@ const bucketController = {
         return res.status(400).json(err);
       });
   },
-  // bucket memeber
+  // bucket member
   findBucketMember: async (req, res) => {
     // get user id from token
     const userIdFound = await getUserIdFromToken(req);
@@ -184,7 +184,7 @@ const bucketController = {
       });
 
     // validate request body with schema
-    const { error } = addBucketMemberValidation(req.body);
+    const { error } = addMemberValidation(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     // check if user from token is member of bucket
@@ -231,7 +231,7 @@ const bucketController = {
       });
 
     // validate request body with schema
-    const { error } = updateBucketMemberValidation(req.body);
+    const { error } = updateMemberValidation(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
     // check if user from token is a member of bucket

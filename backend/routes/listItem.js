@@ -9,4 +9,16 @@ router.get('/:listItemId', verifyToken, listItemController.getListItemById);
 router.put('/:listItemId', verifyToken, listItemController.updateListItem);
 router.delete('/:listItemId', verifyToken, listItemController.deleteListItem);
 
+// member
+router.post(
+  '/:listItemId/member/:memberId',
+  verifyToken,
+  listItemController.addMemberToListItem
+);
+router.delete(
+  '/:listItemId/member/:memberId',
+  verifyToken,
+  listItemController.removeMemberToListItem
+);
+
 module.exports = router;

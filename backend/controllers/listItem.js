@@ -179,6 +179,133 @@ const listItemController = {
         console.log(err);
         return res.status(400).json(err);
       });
+  },
+  // member
+  addMemberToListItem: async (req, res) => {
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to add a member to list item from an invalid user'
+      });
+
+    // check user is member of bucket
+    const listItemId = req.params.listItemId;
+    const listItemFound = await ListItem.findById(listItemId).catch((err) =>
+      console.log(err)
+    );
+    if (!listItemFound)
+      return res
+        .status(400)
+        .json({ error: 'List Item cannot be found for addition of member' });
+
+    // get list from id found
+    const listFoud = await List.findById(
+      listItemFound.idBucketList
+    ).catch((err) => console.log(err));
+    if (!listFoud)
+      return res
+        .status(400)
+        .json({ error: 'List cannot be found for list item member addition' });
+
+    // check if user is member of bucket
+    const bucketId = listFoud.idBucket;
+    const isUserABucketMember = await Bucket.findOne({
+      _id: bucketId,
+      'members.id': userIdFound
+    }).catch((err) => console.log(err));
+    if (!isUserABucketMember)
+      return res.status(400).json({
+        error: 'Unable to add member to list item. User not a member of bucket'
+      });
+
+    // check if member has already been added to list item
+    const memberId = req.params.memberId;
+    const isMemberInListItem = listItemFound.members.find(
+      (f) => f === memberId
+    );
+    if (isMemberInListItem)
+      return res.status(400).json('Member has already been added to list item');
+
+    // add member to list item
+    ListItem.findByIdAndUpdate(
+      listItemId,
+      {
+        $push: { members: memberId }
+      },
+      { upsert: true },
+      (err, listItem) => {
+        if (err) return res.status(400).json(err);
+        else {
+          return res.status(200).json();
+        }
+      }
+    );
+  },
+  removeMemberToListItem: async (req, res) => {
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to remove a member to list item from an invalid user'
+      });
+
+    // check user is member of bucket
+    const listItemId = req.params.listItemId;
+    const listItemFound = await ListItem.findById(listItemId).catch((err) =>
+      console.log(err)
+    );
+    if (!listItemFound)
+      return res
+        .status(400)
+        .json({ error: 'List Item cannot be found for removal of member' });
+
+    // get list from id found
+    const listFoud = await List.findById(
+      listItemFound.idBucketList
+    ).catch((err) => console.log(err));
+    if (!listFoud)
+      return res
+        .status(400)
+        .json({ error: 'List cannot be found for list item member removal' });
+
+    // check if user is member of bucket
+    const bucketId = listFoud.idBucket;
+    const isUserABucketMember = await Bucket.findOne({
+      _id: bucketId,
+      'members.id': userIdFound
+    }).catch((err) => console.log(err));
+    if (!isUserABucketMember)
+      return res.status(400).json({
+        error:
+          'Unable to remove member of list item. User not a member of bucket'
+      });
+
+    // add member to list item
+    const memberId = req.params.memberId;
+    ListItem.findByIdAndUpdate(
+      listItemId,
+      {
+        $push: { members: memberId }
+      },
+      { upsert: true },
+      (err, listItem) => {
+        if (err) return res.status(400).json(err);
+        else {
+          return res.status(200).json();
+        }
+      }
+    );
+
+    const memberid = req.params.memberId;
+    await ListItem.findById(listItemId, (err, listItem) => {
+      if (err) console.log(err);
+      else {
+        listItem.members = listItem.members.filter((f) => f !== memberid);
+        listItem.save((err, listItem) => {
+          if (err) console.log(err);
+          return res.status(200).json();
+        });
+      }
+    });
   }
 };
 

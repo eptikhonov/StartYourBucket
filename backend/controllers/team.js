@@ -275,6 +275,83 @@ const teamController = {
         });
       }
     });
+  },
+  // bucket
+  addBucketToTeam: async (req, res) => {
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to add a bucket to team from an invalid user'
+      });
+
+    // check user is admin of team
+    const teamId = req.params.teamId;
+    const isUserATeamAdminMember = await Team.findOne({
+      _id: teamId,
+      'members.id': userIdFound,
+      'members.memberType': memberTypes.ADMIN
+    }).catch((err) => console.log(err));
+    if (!isUserATeamAdminMember)
+      return res.status(400).json('User not permitted to add a bucket to team');
+
+    const bucketId = req.params.bucketId;
+    // check if bucket has already been added to team
+    const isBucketInTeam = isUserATeamAdminMember.idBuckets.find(
+      (f) => f === bucketId
+    );
+    if (isBucketInTeam)
+      return res.status(400).json('Bucket has already been added to team');
+
+    // add bucket id to team
+    Team.findByIdAndUpdate(
+      teamId,
+      {
+        $push: { idBuckets: bucketId }
+      },
+      { upsert: true },
+      (err, team) => {
+        if (err) return res.status(400).json(err);
+        else {
+          return res.status(200).json();
+        }
+      }
+    );
+  },
+  removeBucketToTeam: async (req, res) => {
+    const userIdFound = await getUserIdFromToken(req);
+    if (!userIdFound)
+      return res.status(400).json({
+        error: 'Unable to remove a team member from an invalid user'
+      });
+
+    // check user is admin of team
+    const teamId = req.params.teamId;
+    const isUserATeamAdminMember = await Team.findOne({
+      _id: teamId,
+      'members.id': userIdFound,
+      'members.memberType': memberTypes.ADMIN
+    }).catch((err) => console.log(err));
+    if (!isUserATeamAdminMember)
+      return res
+        .status(400)
+        .json('User not permitted to remove a bucket of team');
+
+    // remove bucket id from team
+    const bucketId = req.params.bucketId;
+    await Team.findById(teamId, (err, team) => {
+      if (err) console.log(err);
+      else {
+        const indexFound = team.idBuckets.indexOf(bucketId);
+        if (indexFound > -1) {
+          team.idBuckets.splice(indexFound, 1);
+        }
+
+        team.save((err, team) => {
+          if (err) console.log(err);
+          return res.status(200).json();
+        });
+      }
+    });
   }
 };
 

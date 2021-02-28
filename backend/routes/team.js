@@ -27,4 +27,16 @@ router.delete(
   teamController.deleteTeamMember
 );
 
+// bucket
+router.post(
+  '/:teamId/bucket/:bucketId',
+  verifyToken,
+  teamController.addBucketToTeam
+);
+router.delete(
+  '/:teamId/bucket/:bucketId',
+  verifyToken,
+  teamController.removeBucketToTeam
+);
+
 module.exports = router;

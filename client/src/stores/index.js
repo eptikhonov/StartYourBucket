@@ -1,19 +1,28 @@
 /* used as global point for actions and state of stores (redux) */
-import * as Facebook from '../stores/Facebook.js'
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import thunk from "redux-thunk"; // allow async actions
+import { composeWithDevTools } from "redux-devtools-extension";
+import * as Auth from "../stores/Auth.js";
 // export states
 export var AppState = {
-  facebook: Facebook.initState,
-}
+  auth: Auth.initState,
+};
 // export actions
 export var AppActions = {
-  facebookActions: Facebook.actions,
-}
+  authActions: Auth.actions,
+};
 // export reducers (use in configureStore)
 export var AppReducers = {
-  facebook: Facebook.reducer,
-}
+  auth: Auth.reducer,
+};
 
 // export action types
 export var AppActionTypes = {
-  facebookActionTypes: Facebook.actionTypes,
-}
+  authActionTypes: Auth.actionTypes,
+};
+
+// configure store
+const configureStore = () => createStore(combineReducers({ ...AppReducers }), composeWithDevTools(applyMiddleware(thunk)));
+
+const store = configureStore();
+export var ReduxStore = store;

@@ -4,14 +4,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./assets/css/App.scss";
 import { Provider } from "react-redux";
-import configureStore from "./stores/configureStore.js";
+import { ReduxStore } from "./stores";
 import theme from "./assets/theme.js";
 import { MuiThemeProvider } from "@material-ui/core";
-const store = configureStore();
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <Provider store={ReduxStore}>
       <MuiThemeProvider theme={theme}>
         <App />
       </MuiThemeProvider>

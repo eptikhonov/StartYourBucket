@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AppState, AppActions } from "../../stores";
 
-const Home = ({ auth, authActions }) => {
+const SignUp = ({ auth, authActions }) => {
   return (
     <>
-      <h6>Welcome Home</h6>
+      <h1 style={{ color: "black" }}>Sign Up</h1>
     </>
   );
 };
@@ -21,4 +21,4 @@ const mapDispatchToProps = (dispatch) => ({
   authActions: bindActionCreators(AppActions.authActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

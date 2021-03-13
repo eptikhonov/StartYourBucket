@@ -1,24 +1,30 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { AppState, AppActions } from "../../stores";
+import { Link } from "react-router-dom";
 
-const Landing = ({ auth, authActions }) => {
+const Landing = (props) => {
   return (
     <>
-      <h6>Landing Page</h6>
+      <h1 style={{ color: "black" }}>Landing Page</h1>
+      <ul>
+        <li>
+          <Link to="/login">Go to Log In View</Link>
+        </li>
+        <li>
+          <Link to="/signup">Go to Sign Up View</Link>
+        </li>
+        <li>
+          <Link to="/test">Go to 404 Page</Link>
+        </li>
+      </ul>
     </>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {
-    auth: AppState.auth,
-  };
+  return {};
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  authActions: bindActionCreators(AppActions.authActions, dispatch),
-});
+const mapDispatchToProps = (dispatch) => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

@@ -3,13 +3,13 @@ import axios from "axios";
 // auth state
 export const initState = {
   isAuthenticated: false,
-  user: null,
   token: null,
 };
 
 // action types
 export const actionTypes = {
   passwordLogin: "PASSWORD_LOGIN",
+  logOut: "LOG_OUT",
 };
 
 // actions
@@ -36,6 +36,9 @@ export const actions = {
       })
       .catch((err) => console.log(err));
   },
+  logOut: () => (dispatch) => {
+    dispatch({ type: actionTypes.logOut });
+  },
 };
 
 // reducer
@@ -46,6 +49,13 @@ export const reducer = (state = initState, action) => {
         ...state,
         isAuthenticated: true,
         token: action.token,
+      };
+      return AppState.auth;
+    case actionTypes.logOut:
+      AppState.auth = {
+        ...state,
+        isAuthenticated: false,
+        token: null,
       };
       return AppState.auth;
     default:

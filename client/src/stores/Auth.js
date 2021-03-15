@@ -20,11 +20,12 @@ export const actions = {
       .then(async (res) => {
         const token = res.data;
         await dispatch({ type: actionTypes.passwordLogin, token });
-        return true;
+        return { valid: true, error: "" };
       })
       .catch((err) => {
+        err = err.response.data;
         console.log(err);
-        return false;
+        return { valid: false, error: err?.error ? err.error : err };
       });
   },
   register: (registerObj) => async (dispatch) => {

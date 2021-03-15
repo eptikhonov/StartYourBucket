@@ -46,7 +46,7 @@ const authController = {
     const existingUser = await User.findOne({
       email: req.body.email
     }).catch((err) => console.log(err));
-    if (!existingUser) return res.json('Email is not found');
+    if (!existingUser) return res.status(400).json('Email is not found');
 
     // validate password
     const validPassword = await bcrypt.compare(

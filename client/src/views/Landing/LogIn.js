@@ -1,6 +1,6 @@
 import { makeStyles, Container, Typography, Box, useMediaQuery } from "@material-ui/core";
 import * as React from "react";
-import { LogInModal } from "../../components";
+import { LogInCard } from "../../components";
 import logo from "../../assets/images/logo.png";
 
 const useStyles = makeStyles({
@@ -9,8 +9,8 @@ const useStyles = makeStyles({
     textAlign: "center",
   },
   logoImg: {
-    width: "50px",
-    height: "50px",
+    width: "40px",
+    height: "40px",
     display: "inline-block",
     verticalAlign: "middle",
   },
@@ -18,10 +18,10 @@ const useStyles = makeStyles({
     color: "#253858",
     display: "inline-block",
     verticalAlign: "middle",
-    fontSize: "50px",
+    fontSize: "40px",
     fontWeight: "bold",
     paddingLeft: "15px",
-    height: "50px",
+    height: "40px",
     width: "auto",
     padding: "0",
     margin: "0",
@@ -29,6 +29,7 @@ const useStyles = makeStyles({
 });
 
 const LogIn = (props) => {
+  document.title = "Log in to StartYourBucket";
   const isMobileWidth = useMediaQuery("(max-width:640px)");
   const classes = useStyles();
   return (
@@ -42,7 +43,7 @@ const LogIn = (props) => {
         </Typography>
       </Container>
       <Container style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <LogInModal {...props} />
+        <LogInCard {...props} />
       </Container>
     </>
   );

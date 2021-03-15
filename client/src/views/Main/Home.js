@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { AppState, AppActions } from "../../stores";
 
 const Home = (props) => {
+  document.title = "StartYourBucket";
   return (
     <>
       <h1 style={{ color: "black" }}>Welcome Home</h1>

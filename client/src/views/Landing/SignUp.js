@@ -1,24 +1,52 @@
+import { makeStyles, Container, Typography, Box, useMediaQuery } from "@material-ui/core";
 import * as React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { AppState, AppActions } from "../../stores";
+import { SignUpCard } from "../../components";
+import logo from "../../assets/images/logo.png";
 
-const SignUp = ({ auth, authActions }) => {
+const useStyles = makeStyles({
+  logoContainer: {
+    display: "block",
+    textAlign: "center",
+  },
+  logoImg: {
+    width: "40px",
+    height: "40px",
+    display: "inline-block",
+    verticalAlign: "middle",
+  },
+  logoText: {
+    color: "#253858",
+    display: "inline-block",
+    verticalAlign: "middle",
+    fontSize: "40px",
+    fontWeight: "bold",
+    paddingLeft: "15px",
+    height: "40px",
+    width: "auto",
+    padding: "0",
+    margin: "0",
+  },
+});
+
+const SignUp = (props) => {
+  document.title = "Create a StartYourBucket account";
+  const isMobileWidth = useMediaQuery("(max-width:640px)");
+  const classes = useStyles();
   return (
     <>
-      <h1 style={{ color: "black" }}>Sign Up</h1>
+      <Container className={classes.logoContainer} style={{ margin: isMobileWidth ? "auto" : "40px auto" }}>
+        <img className={classes.logoImg} alt="logo" src={logo} />
+        <Typography component="span">
+          <Box lineHeight={1} className={classes.logoText}>
+            StartYourBucket
+          </Box>
+        </Typography>
+      </Container>
+      <Container style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <SignUpCard {...props} />
+      </Container>
     </>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    auth: AppState.auth,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  authActions: bindActionCreators(AppActions.authActions, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default SignUp;

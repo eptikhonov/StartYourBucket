@@ -72,11 +72,11 @@ const useStyles = makeStyles({
   },
 });
 
-const LogInModal = ({ auth, authActions, history }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LogInCard = ({ auth, authActions, history }) => {
+  const email = auth.isNewlyRegistered ? auth.isNewlyRegistered.email : "";
+  const [userToLogin, setUserToLogin] = useState({ email, password: "" });
   const [showErrModal, setErrModal] = useState({ display: false, msg: "" });
-
+  const [showNewlyRegisteredModal, setNewlyRegisteredModal] = useState(auth.isNewlyRegistered);
   const isMobileWidth = useMediaQuery("(max-width:640px)");
   const classes = useStyles();
 
@@ -86,7 +86,16 @@ const LogInModal = ({ auth, authActions, history }) => {
         <CardContent>
           <h1 className={classes.cardTitle}>Log in to StartYourBucket</h1>
           <form className={classes.form}>
-            <TextField className={classes.input} required fullWidth label="Email" type="email" variant="outlined" onChange={(e) => setEmail(e.target.value)} value={email} />
+            <TextField
+              className={classes.input}
+              required
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              onChange={(e) => setUserToLogin({ ...userToLogin, email: e.target.value })}
+              value={userToLogin.email}
+            />
             <TextField
               className={classes.input}
               required
@@ -95,8 +104,8 @@ const LogInModal = ({ auth, authActions, history }) => {
               type="password"
               variant="outlined"
               autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
+              onChange={(e) => setUserToLogin({ ...userToLogin, password: e.target.value })}
+              value={userToLogin.password}
             />
             {showErrModal.display ? (
               <Alert className={classes.alertError} severity="error" onClose={() => setErrModal({ display: false, msg: "" })}>
@@ -104,10 +113,22 @@ const LogInModal = ({ auth, authActions, history }) => {
               </Alert>
             ) : null}
 
+            {showNewlyRegisteredModal ? (
+              <Alert
+                className={classes.alertNewlyRegistered}
+                severity="success"
+                onClose={async () => {
+                  await setNewlyRegisteredModal(false);
+                }}
+              >
+                {"You have successfully created an account. Sign in."}
+              </Alert>
+            ) : null}
+
             <Button
               className={classes.button}
               onClick={async () => {
-                const loginResult = await authActions.login({ email, password });
+                const loginResult = await authActions.login(userToLogin);
                 if (loginResult.valid) history.push("/home");
                 else {
                   setErrModal({ display: true, msg: loginResult.error });
@@ -152,4 +173,4 @@ const mapDispatchToProps = (dispatch) => ({
   authActions: bindActionCreators(AppActions.authActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogInModal);
+export default connect(mapStateToProps, mapDispatchToProps)(LogInCard);

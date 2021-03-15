@@ -33,7 +33,7 @@ const LogIn = (props) => {
   const classes = useStyles();
   return (
     <>
-      <Container className={classes.logoContainer} style={{ margin: isMobileWidth ? "0" : "40px 0 40px 0" }}>
+      <Container className={classes.logoContainer} style={{ margin: isMobileWidth ? "auto" : "40px auto" }}>
         <img className={classes.logoImg} alt="logo" src={logo} />
         <Typography component="span">
           <Box lineHeight={1} className={classes.logoText}>

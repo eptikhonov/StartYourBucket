@@ -8,7 +8,7 @@ import { AppState, AppActions } from "../../stores";
 
 const useStyles = makeStyles({
   card: {
-    width: 400,
+    width: "400px",
     padding: "25px 40px",
   },
   cardTitle: {
